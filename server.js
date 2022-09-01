@@ -10,7 +10,7 @@ const secrets = require('./secrets');
 const { env } = require('process');
 
 const app = express()
-
+const port = 3000
 // se configura uso de sesiones
 // https://github.com/voxpelli/node-connect-pg-simple
 app.use(session({
@@ -46,6 +46,8 @@ app.use(require('./routes/auth'))
 app.use(require('./routes/routes'))
 
 
-app.listen(3000, () => {
-  console.log('servidor ejecutando en el puerto 3000');
+app.listen(port, () => {
+  console.log(`Servidor en puerto http://localhost:${port}`)
 })
+
+// nodemon server

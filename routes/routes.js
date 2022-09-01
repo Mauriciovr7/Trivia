@@ -1,5 +1,5 @@
 const { Router } = require('express')
-
+const { get_pregunta, create_pregunta } = require('../db/preguntas.js')
 const router = Router()
 
 // Vamos a crear un middleware para ver si el usuario está logueado o no

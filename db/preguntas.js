@@ -6,12 +6,14 @@ async function create_table () {
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   await client.query(`
-    create table if not exists users (
+    create table if not exists preguntas (
       id serial primary key,
-      name varchar(255) not null,
-      email varchar(255) not null unique,
-      password varchar(255) not null,
-      isAdmin boolean not null
+      pregunta varchar(255) not null,
+      respuesta_correcta varchar(255) not null,
+      respuesta_falsa1 varchar(255) not null,
+      respuesta_falsa2 varchar(255) not null,
+      respuesta_falsa3 varchar(255),
+      respuesta_falsa4 varchar(255)
     )
   `)
 
@@ -21,13 +23,13 @@ async function create_table () {
 create_table()
 
 
-async function get_user (email) {
+async function get_pregunta (email) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const { rows } = await client.query(
-    `select * from users where email=$1`,
+    `select * from preguntas where email=$1`,
     [email]
   )
 
@@ -38,13 +40,13 @@ async function get_user (email) {
   return rows[0]
 }
 
-async function create_user (name, email, password) {
+async function create_pregunta (name, email, password) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const { rows } = await client.query(
-    `insert into users (name, email, password) values ($1, $2, $3) returning *`,
+    `insert into preguntas (name, email, password) values ($1, $2, $3) returning *`,
     [name, email, password]
   )
 
@@ -54,5 +56,5 @@ async function create_user (name, email, password) {
   return rows[0]
 }
 
-module.exports = { get_user, create_user }
+module.exports = { get_pregunta, create_pregunta }
 
