@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { get_pregunta, create_pregunta } = require('../db/preguntas.js')
+const { get_preguntas, create_pregunta } = require('../db/preguntas.js')
 const { get_jugadas, create_jugada } = require('../db/jugadas.js')
 
 const router = Router()
@@ -43,7 +43,15 @@ router.post('/new_question', protected_route, async (req, res) => {
   const falsa4 = req.body.respuesta_falsa4
   await create_pregunta(pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4)
   
-  res.render('new_question.html')
+  res.redirect('new_question.html')
+})
+
+router.get('/questions', protected_route, async(req, res) => {
+  const datos = await get_preguntas()
+  console.log('datos ', datos);
+  res.render('lest_play.html', {
+    datos
+  })
 })
 
 router.get('*', (req, res) => {
