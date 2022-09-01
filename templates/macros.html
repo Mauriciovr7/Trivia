@@ -1,7 +1,7 @@
 {% macro navbar(ruta, user) %}
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">{{app_name}}</a>
+    <a class="navbar-brand">{{app_name}}</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,11 +11,11 @@
           <a class="nav-link {% if ruta == '/' %}active{% endif %}" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if ruta == '/dos' %}active{% endif %}" href="/dos">Segunda Página</a>
+          <a class="nav-link {% if ruta == '/new_question' %}active{% endif %}" href="/new_question">Add a question</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {% if ruta == '/tres' %}active{% endif %}" href="/tres">TRESSS</a>
-        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link {% if ruta == '/lets_play' %}active{% endif %}" href="/lets_play">lets_play</a>
+        </li> -->
       </ul>
       <form class="d-flex" role="search">
         <p class="text-white me-4">{{ user.name }}</p>

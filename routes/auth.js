@@ -76,7 +76,7 @@ router.post('/register', async (req, res) => {
   req.session.user = { id: new_user.id, name, email }
 
   // 5. y redirigimos a la ruta principal
-  res.redirect('/')
+  res.redirect('/login')
 })
 
 module.exports = router;

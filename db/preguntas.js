@@ -40,14 +40,14 @@ async function get_pregunta (email) {
   return rows[0]
 }
 
-async function create_pregunta (name, email, password) {
+async function create_pregunta (pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const { rows } = await client.query(
-    `insert into preguntas (name, email, password) values ($1, $2, $3) returning *`,
-    [name, email, password]
+    `insert into preguntas (pregunta, respuesta_correcta, respuesta_falsa1, respuesta_falsa2, respuesta_falsa3, respuesta_falsa4) values ($1, $2, $3,$4, $5, $6) returning *`,
+    [pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4]
   )
 
   // 3. Devuelvo el cliente al pool

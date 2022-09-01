@@ -2,6 +2,14 @@
 {% from 'macros.html' import navbar %}
 
 {% block main %}
-  {{ navbar('/', user) }}
-  <h2 class="text-center">Hola {{ user.name }}</h2>
+{{ navbar('/', user) }}
+<h2 class="text-center">Hola {{ user.name }}</h2>
+<div class="container">
+  <a href="/lets_play" class=" btn btn-primary">Play</a>
+  <p>Hacer click en botón para jugar Trivia</p>
+</div>
+
+<div>
+  <table></table>
+</div>
 {% endblock %}
