@@ -25,8 +25,12 @@ router.get('/new_question', protected_route, (req, res) => {
   res.render('new_question.html')
 })
 
-router.get('/lets_play', protected_route, (req, res) => {
-  res.render('lets_play.html')
+router.get('/lets_play', protected_route, async (req, res) => {
+
+  const datos = await get_preguntas()
+  console.log('datos ', datos)
+
+  res.render('lets_play.html', {datos})
 })
 
 /* router.get('/tres', protected_route, (req, res) => {
@@ -43,15 +47,7 @@ router.post('/new_question', protected_route, async (req, res) => {
   const falsa4 = req.body.respuesta_falsa4
   await create_pregunta(pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4)
   
-  res.redirect('new_question.html')
-})
-
-router.get('/questions', protected_route, async(req, res) => {
-  const datos = await get_preguntas()
-  console.log('datos ', datos);
-  res.render('lest_play.html', {
-    datos
-  })
+  res.render('new_question.html')
 })
 
 router.get('*', (req, res) => {

@@ -3,12 +3,49 @@
 
 {% block main %}
 {{ navbar('/', user) }}
-<h2 class="text-center">Hola {{ user.name }}</h2>
+<!-- <h2 class="text-center">Hola {{ user.name }}</h2> -->
 <div class="container">
-  <a href="/lets_play" class=" btn btn-primary">Play</a>
-  <p>Hacer click en botón para jugar Trivia</p>
+  <div class="row mt-5">
+    <div class=" border border-dark col-md-5 offset-md-3 text-center p-3 bg-secondary bg-opacity-50 fs-6">
+      <a href="/lets_play" class=" btn btn-primary shadow-lg">Play!</a>
+      <p>Click the button above to start the trivia game.</p>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-4 offset-md-6">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
 </div>
 
+<div class="row">
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Score</th>
+          <th scope="col">Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div>
   <table></table>
 </div>
