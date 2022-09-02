@@ -7,52 +7,29 @@
 <h6>Choose an answer for each of the questions and submit the test once done.</h6>
 <h5>Good luck!</h5>
 <div class="container-fluid">
-  {% for dato in datos%}
-  <form action="" class="border border-dark mb-3">
-    <div class="m-3">
-      <h6>{{ dato.id }}. {{ dato.pregunta }}</h6>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-        <label class="form-check-label" for="flexRadioDefault1">
-          {{ dato.respuesta_correcta }}
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-        <label class="form-check-label" for="flexRadioDefault1">
-          {{ dato.respuesta_falsa1 }}
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-        <label class="form-check-label" for="flexRadioDefault1">
-          {{ dato.respuesta_falsa2 }}
-        </label>
-      </div>
-      {% if dato.respuesta_falsa3 %}
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-        <label class="form-check-label" for="flexRadioDefault1">
-          {{ dato.respuesta_falsa3 }}
-        </label>
-      </div>
-      {%endif%}
+  <form action="/respuestas" method="post" class="border border-dark mb-3">
+    {% for dato in datos %} 
+      <div class="m-3">
+        <input name="id" value="{{ dato.id }}" hidden >
+        <h6>{{ dato.pregunta }} </h6>
+        {% set indice=loop.index %}
 
-      {% if dato.respuesta_falsa4 %}
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-        <label class="form-check-label" for="flexRadioDefault1">
-          {{ dato.respuesta_falsa4 }}
-        </label>
+        {% for respuesta in dato.respuestas %}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="{{respuesta.value}}" name="pregunta{{ indice }}" >
+          <label class="form-check-label" for="flexRadioDefault1">
+            {{ respuesta.text }} 
+          </label>
+              
+        </div>
+        {%endfor%}
       </div>
-      {%endif%}
+    {%endfor%}
+    <div class="mt-3 float-end">
+      <button>Cancel</button>
+      <button>Submit</button>
     </div>
   </form>
-  {%endfor%}
-  <div class="mt-3 float-end">
-    <button>Cancel</button>
-    <button>Submit</button>
-  </div>
 
 </div>
 {% endblock %}

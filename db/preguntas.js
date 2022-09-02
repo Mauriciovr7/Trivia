@@ -1,6 +1,7 @@
 const pool = require('./pool.js')
 
 async function create_table () {
+
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
@@ -13,7 +14,8 @@ async function create_table () {
       respuesta_falsa1 varchar(255) not null,
       respuesta_falsa2 varchar(255) not null,
       respuesta_falsa3 varchar(255),
-      respuesta_falsa4 varchar(255)
+      respuesta_falsa4 varchar(255),
+      jugada_id int not null references jugadas(id)
     )
   `)
 
@@ -29,16 +31,17 @@ async function get_preguntas () {
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
-  const {rows} = await client.query(
-    `select * from preguntas`    
-  )
-
+  const respuesta = await client.query({
+    text: `select * from preguntas order by random() limit 3;`,
+    //rowMode: 'array'
+  })
+  //let respuesta = rows.rows.sort()
   // 3. Devuelvo el cliente al pool
   client.release()
-  console.log('db ', rows);
+  //console.log('db ', rows);
 
   // 4. retorno preguntas, en caso de que exista
-  return rows//[0]
+  return respuesta.rows//[0]
 }
 
 async function create_pregunta (pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4) {

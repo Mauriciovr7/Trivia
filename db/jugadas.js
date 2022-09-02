@@ -10,8 +10,7 @@ async function create_table () {
       id serial primary key,
       score int not null ,
       percentage float not null,
-      user_id int not null references users(id),
-      pregunta_id int not null references preguntas(id)
+      user_id int not null references users(id)      
     )
   `)
 
