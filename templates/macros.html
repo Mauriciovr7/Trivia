@@ -11,7 +11,7 @@
           <a class="nav-link {% if ruta == '/' %}active{% endif %}" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if ruta == '/new_question' %}active{% endif %}" href="/new_question">Add a question</a>
+          <a class="btn_add nav-link {% if ruta == '/new_question' %}active{% endif %}" href="/new_question" hidden>Add a question</a>
         </li>
         <!-- <li class="nav-item">
           <a class="nav-link {% if ruta == '/lets_play' %}active{% endif %}" href="/lets_play">lets_play</a>
@@ -19,9 +19,19 @@
       </ul>
       <form class="d-flex" role="search">
         <p class="text-white me-4">{{ user.name }}</p>
+        <p class="usuario text-white me-4" hidden>{{ user.isadmin}}</p>
+
         <a href="/logout" class="btn btn-outline-danger" type="submit">Logout</a>
       </form>
     </div>
   </div>
 </nav>
+<!-- <script src="/js/scripts.js"></script> -->
+<script>
+  const us = document.querySelector('.usuario')
+  if (us.innerHTML == 'true') {
+    const bton_add = document.querySelector('.btn_add')
+    bton_add.removeAttribute('hidden')
+  }
+</script>
 {% endmacro %}

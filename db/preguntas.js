@@ -6,6 +6,8 @@ async function create_table () {
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
+
+  // crear tabla sin jugadas_id   y despues de q admin llene con preguntas crear con alter table add column jugadas_id
   await client.query(`
     create table if not exists preguntas (
       id serial primary key,
@@ -14,10 +16,10 @@ async function create_table () {
       respuesta_falsa1 varchar(255) not null,
       respuesta_falsa2 varchar(255) not null,
       respuesta_falsa3 varchar(255),
-      respuesta_falsa4 varchar(255),
-      jugada_id int not null references jugadas(id)
+      respuesta_falsa4 varchar(255)
     )
   `)
+      // jugada_id int not null references jugadas(id)
 
   // 3. Devuelvo el cliente al pool
   client.release()
@@ -32,7 +34,7 @@ async function get_preguntas () {
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const respuesta = await client.query({
-    text: `select * from preguntas order by random() limit 3;`,
+    text: `select * from preguntas order by random() limit 3;` // ,
     //rowMode: 'array'
   })
   //let respuesta = rows.rows.sort()

@@ -34,7 +34,8 @@ router.post('/login', async (req, res) => {
   req.session.user = {
     name: user_buscado.name,
     email: user_buscado.email,
-    id: user_buscado.id
+    id: user_buscado.id,
+    isadmin: user_buscado.isadmin
   }
   return res.redirect('/')  
 })
@@ -47,6 +48,7 @@ router.get('/logout', (req, res) => {
 router.get('/register', (req, res) => {
   const messages = req.flash()
   console.log(messages);
+  
   res.render('register.html', {messages})
 })
 
