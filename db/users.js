@@ -1,6 +1,6 @@
 const pool = require('./pool.js')
 
-async function create_table () {
+async function create_table() {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
@@ -14,13 +14,12 @@ async function create_table () {
       isadmin boolean not null default false
     )
   `)
-
   // 3. Devuelvo el cliente al pool
   client.release()
 }
 create_table()
 
-async function get_user (email) {
+async function get_user(email) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
@@ -29,7 +28,6 @@ async function get_user (email) {
     `select * from users where email=$1`,
     [email]
   )
-
   // 3. Devuelvo el cliente al pool
   client.release()
 
@@ -37,12 +35,12 @@ async function get_user (email) {
   return rows[0]
 }
 
-async function create_user (name, email, password) {
+async function create_user(name, email, password) {
 
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
-  // cuantos usuarios hay
+  // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const cant_users = await client.query('select * from users')
   let resp
   if (cant_users.rows == 0) {
@@ -56,17 +54,9 @@ async function create_user (name, email, password) {
       [name, email, password]
     )
   }
-
-  // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
-   
-
   // 3. Devuelvo el cliente al pool
-  client.release()
-
-  // return respuesta.rows
-  // return rows[0]
+  client.release()  
   return resp.rows[0]
-
 }
 
 module.exports = { get_user, create_user }

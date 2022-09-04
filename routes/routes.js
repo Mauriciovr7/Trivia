@@ -1,9 +1,10 @@
 const { Router } = require('express')
 const { get_preguntas, create_pregunta } = require('../db/preguntas.js')
 const { get_jugadas, create_jugada } = require('../db/jugadas.js')
-const { mostrarRespuesta } = require('../functions.js') 
+const { mostrarRespuesta } = require('../functions.js')
 
 const router = Router()
+let info_div = false
 
 // Vamos a crear un middleware para ver si el usuario está logueado o no
 function protected_route(req, res, next) {
@@ -19,18 +20,14 @@ function protected_route(req, res, next) {
 
 
 // index GET
-router.get('/', protected_route, async(req, res) => {
+router.get('/', protected_route, async (req, res) => {
   req.session.user
   const jugadas = await get_jugadas()
-  // req.session.rol = 'Admin'
-  // req.session.get_jugadas
-  console.log('user ', req.session.user);
-  // console.log('jugadas ', req.session.jugadas)
-  console.log('jugadas ', jugadas)
 
- 
-
-  res.render('index.html', {jugadas})
+  //console.log('userios************************** ', req.session);  
+  //console.log('jugadas ', jugadas)
+ //console.log('##########',info_div)
+  res.render('index.html', { jugadas, info_div})
 })
 
 
@@ -42,11 +39,9 @@ router.get('/new_question', protected_route, (req, res) => {
 
 // new_question POST
 router.post('/new_question', protected_route, async (req, res) => {
-  console.log('isadmin ',req.session.user);
-
-  if ( req.session.user.isadmin == true ) {
-
-    //console.log('req.body', req.body);
+  //console.log('isadmin ', req.session.user);
+  if (req.session.user.isadmin == true) {
+    ////console.log('req.body', req.body);
     const pregunta = req.body.pregunta
     const respuesta_correcta = req.body.respuesta_correcta
     const falsa1 = req.body.respuesta_falsa1
@@ -63,40 +58,37 @@ router.post('/new_question', protected_route, async (req, res) => {
 // lets_play GET
 router.get('/lets_play', protected_route, async (req, res) => {
   const datos = await get_preguntas() // const
-  console.log('datos ', datos) // preguntas
-
+  //console.log('datos ', datos) // preguntas
   mostrarRespuesta(datos) // funciones
   res.render('lets_play.html', { datos })
 })
 
-// respuestas POST
+// respuestas del juego POST
 router.post('/lets_play', async (req, res) => {
+  const pregunta1 = req.body.pregunta1
+  const pregunta2 = req.body.pregunta2
+  const pregunta3 = req.body.pregunta3
+  info_div = req.body.info_div
+  //console.log('********************', info_div)
 
-  let pregunta1 = req.body.pregunta1
-  let pregunta2 = req.body.pregunta2
-  let pregunta3 = req.body.pregunta3
-
-  const user_id = req.session.user.id  
+  const user_id = req.session.user.id
   let resultado = 0;
   let porcentaje = 0;
-  if (pregunta1 == 'correcta') {
+  if (pregunta1 == '1') {
     resultado++
   }
-  if (pregunta2 == 'correcta') {
+  if (pregunta2 == '1') {
     resultado++
   }
-  if (pregunta3 == 'correcta') {
+  if (pregunta3 == '1') {
     resultado++
   }
-  
+
   porcentaje = ((resultado * 100) / 3).toFixed(1)
-  console.log('score % id_us', resultado, porcentaje, user_id )
+  //console.log('score % id_us', resultado, porcentaje, user_id)
   create_jugada(resultado, porcentaje, user_id)
-
-
   res.redirect('/')
 })
-
 
 // 404 GET>
 router.get('*', (req, res) => {

@@ -46,9 +46,7 @@ router.get('/logout', (req, res) => {
 })
 
 router.get('/register', (req, res) => {
-  const messages = req.flash()
-  console.log(messages);
-  
+  const messages = req.flash()   
   res.render('register.html', {messages})
 })
 
@@ -64,19 +62,16 @@ router.post('/register', async (req, res) => {
     req.flash('errors', 'Las contraseñas no coinciden')
     return res.redirect('/register')
   }
-
   // 3. validamos que no exista otro usuario con ese mismo correo
   const current_user = await get_user(email)
   if (current_user) {
     req.flash('errors', 'Ese email ya está ocupado')
     return res.redirect('/register')
   }
-
   // 4. Finalmente lo agregamos a la base de datos
   const encrypted_pass = await bcrypt.hash(password, 10)
   const new_user = await create_user(name, email, encrypted_pass)
   req.session.user = { id: new_user.id, name, email }
-
   // 5. y redirigimos a la ruta principal
   res.redirect('/login')
 })

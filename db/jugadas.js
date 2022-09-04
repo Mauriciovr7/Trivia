@@ -20,21 +20,6 @@ async function create_table () {
 create_table()
 
 
-/* async function get_jugadas (id) {
-  // 1. Solicito un 'cliente' al pool de conexiones
-  const client = await pool.connect()
-
-  // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
-  const { rows } = await client.query(
-    `select * from jugadas where id=$1`,
-    [id]
-  )
-  // 3. Devuelvo el cliente al pool
-  client.release()
-
-  // 4. retorno el primer usuario, en caso de que exista
-  return rows[0]
-} */
 async function get_jugadas () {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
@@ -50,23 +35,18 @@ async function get_jugadas () {
   return resp.rows
 }
 
-// select name from users, jugadas where id(users) = user_id(jugadas)
 
-async function create_jugada (score, percentage, user_id) { // , pregunta_id) {
+async function create_jugada (score, percentage, user_id) { 
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
-
-  // alert table jugadas add column fkey
-
+  
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const resp = await client.query(
-    `insert into jugadas (score, percentage, user_id) values ($1, $2, $3) returning *`, //, pregunta_id // , $4) returning *`,
-    [score, percentage, user_id] // , pregunta_id]
+    `insert into jugadas (score, percentage, user_id) values ($1, $2, $3) returning *`, 
+    [score, percentage, user_id] 
   )
-
   // 3. Devuelvo el cliente al pool
   client.release()
-
   return resp.rows
 }
 

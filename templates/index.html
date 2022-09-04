@@ -3,16 +3,15 @@
 
 {% block main %}
 {{ navbar('/', user) }}
-<!-- <h2 class="text-center">Hola {{ user.name }}</h2> -->
 <div class="container">
-
-  <div class="text-center mt-3 border border-dark text-white bg-success jugada_usuario" >
-    <h2>{{jugadas[jugadas.length-1].user_id}}</h2>
-    <h2>Genial {{jugadas[jugadas.length-1].name}} - {{jugadas[jugadas.length-1].score}}/3 - {{jugadas[jugadas.length-1].percentage}}%</h2>
+  <p id="info"> {{info_div}}</p>
+  <!-- HIDDEN -->
+  <div class="text-center mt-3 border border-dark border-3 text-white bg-success bg-opacity-50" id= "jugada_usuario" >
+    <h2>That was great, {{jugadas[jugadas.length-1].name}}!  Your score is {{jugadas[jugadas.length-1].score}}/3  ({{jugadas[jugadas.length-1].percentage}}%).</h2>
   </div>
-  <div class="row mt-5">
-    <div class=" border border-dark col-md-5 offset-md-3 text-center p-3 bg-secondary bg-opacity-50 fs-6">
-      <a href="/lets_play" class=" btn btn-primary shadow-lg">Play!</a>
+  <div class="row mt-5 ">
+    <div class=" border border-3 border-dark col-md-5 offset-md-3 text-center p-3 bg-secondary bg-opacity-25 fs-6">
+      <a href="/lets_play" class=" btn btn-primary shadow mb-3" >Play!</a>
       <p>Click the button above to start the trivia game.</p>
     </div>
   </div>
@@ -25,10 +24,9 @@
     </div>
   </div>
 </div>
-
 <div class="row">
-  <div class="col-12">
-    <table class="table table-striped">
+  <div class="col-12 border border-3 border-dark mt-4">
+    <table class="table table-striped ">
       <thead>
         <tr>
           <th scope="col">Name</th>
@@ -39,7 +37,6 @@
       <tbody>
         {% for jugada in jugadas %}
           <tr>
-            <!-- <td>{{jugadas.name}}</td> -->
             <td>{{jugada.name}}</td>
             <td>{{jugada.score}}/3</td>
             <td>{{jugada.percentage}}%</td>
@@ -49,14 +46,21 @@
     </table>
   </div>
 </div>
-
 <script>
-  const div_verde = document.querySelector('.jugada_usuario')
-  // for(let i=0;i<)
-
-  if (div_verde.innerHTML == 'true') {
-    // const bton_add = document.querySelector('.btn_add')
-    div_verde.removeAttribute('hidden')
+//console.log('index index index', info_div)
+  function div (){ // aparecer verde
+  let div_verde = document.querySelector('#jugada_usuario')    
+  div_verde.removeAttribute('hidden')
+}
+const info_div= document.querySelector('#info')
+console.log('probando ando ando', info_div.innerHTML)
+  if(info_div.innerHTML != 'false'){
+    console.log('no es falsooooooooo')    
+  } 
+  else{
+    div()
   }
+
 </script>
+
 {% endblock %}
