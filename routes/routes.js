@@ -20,16 +20,22 @@ function protected_route(req, res, next) {
 
 // index GET
 router.get('/', protected_route, async (req, res) => {
-  req.session.user
-  req.session.name_us
+  try {
+    
+    req.session.user
+    req.session.name_us
+  
+    if (req.session.name_us == '' || req.session.name_us == 'all') {
+      req.session.name_us = undefined
+    }
+    
+    const jugadas = await get_jugadas(req.session.name_us)
+    res.render('index.html', { jugadas})
 
-  if (req.session.name_us == '' || req.session.name_us == 'all') {
-    req.session.name_us = undefined
+  } catch (error) {
+    console.log(erro);
   }
   
-  const jugadas = await get_jugadas(req.session.name_us)
-  
-  res.render('index.html', { jugadas})
 })
 
 
@@ -41,58 +47,82 @@ router.get('/new_question', protected_route, (req, res) => {
 
 // new_question POST
 router.post('/new_question', protected_route, async (req, res) => {
-  if (req.session.user.isadmin == true) {
-    const pregunta = req.body.pregunta
-    const respuesta_correcta = req.body.respuesta_correcta
-    const falsa1 = req.body.respuesta_falsa1
-    const falsa2 = req.body.respuesta_falsa2
-    const falsa3 = req.body.respuesta_falsa3
-    const falsa4 = req.body.respuesta_falsa4
-    await create_pregunta(pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4)
+  try {
+    
+    if (req.session.user.isadmin == true) {
+      const pregunta = req.body.pregunta
+      const respuesta_correcta = req.body.respuesta_correcta
+      const falsa1 = req.body.respuesta_falsa1
+      const falsa2 = req.body.respuesta_falsa2
+      const falsa3 = req.body.respuesta_falsa3
+      const falsa4 = req.body.respuesta_falsa4
+      await create_pregunta(pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4)
+    }
+    res.redirect('/')
+
+  } catch (error) {
+    console.log(erro);
   }
 
-  res.redirect('/')
 })
 
 
 // lets_play GET
 router.get('/lets_play', protected_route, async (req, res) => {
-  const datos = await get_preguntas()
-  await mostrarRespuesta(datos)
-  res.render('lets_play.html', { datos })
+  try {
+    
+    const datos = await get_preguntas()
+    await mostrarRespuesta(datos)
+    res.render('lets_play.html', { datos })
+
+  } catch (error) {
+    console.log(erro);
+  }
 })
 
 // respuestas del juego POST
 router.post('/lets_play', async (req, res) => {
-  const pregunta1 = req.body.pregunta1
-  const pregunta2 = req.body.pregunta2
-  const pregunta3 = req.body.pregunta3
+  try {
+    
+    const pregunta1 = req.body.pregunta1
+    const pregunta2 = req.body.pregunta2
+    const pregunta3 = req.body.pregunta3
+  
+    const user_id = req.session.user.id
+    let resultado = 0;
+    let porcentaje = 0;
+    if (pregunta1 == '1') {
+      resultado++
+    }
+    if (pregunta2 == '1') {
+      resultado++
+    }
+    if (pregunta3 == '1') {
+      resultado++
+    }
+  
+    porcentaje = ((resultado * 100) / 3).toFixed(1)
+    await create_jugada(resultado, porcentaje, user_id)
+    req.session.user.play = true
+    res.redirect('/')
 
-  const user_id = req.session.user.id
-  let resultado = 0;
-  let porcentaje = 0;
-  if (pregunta1 == '1') {
-    resultado++
+  } catch (error) {
+    console.log(erro);
   }
-  if (pregunta2 == '1') {
-    resultado++
-  }
-  if (pregunta3 == '1') {
-    resultado++
-  }
-
-  porcentaje = ((resultado * 100) / 3).toFixed(1)
-  await create_jugada(resultado, porcentaje, user_id)
-  req.session.user.play = true
-  res.redirect('/')
 })
 
 // /search
 // respuestas del juego POST
 router.post('/search',  (req, res) => {
-  req.session.name_us = req.body.nombre
+  try {
+    
+    req.session.name_us = req.body.nombre
+    res.redirect('/')
+    
+  } catch (error) {
+    console.log(erro);
+  }
   
-  res.redirect('/')
 })
 
 // 404 GET>
