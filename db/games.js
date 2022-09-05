@@ -7,11 +7,12 @@ async function create_table() {
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   await client.query(`
-    create table if not exists jugadas (
+    create table if not exists games (
       id serial primary key,
       score int not null ,
       percentage float not null,
-      user_id int not null references users(id)      
+      user_id int not null references users(id),
+      date timestamp default now()
     )
   `)
 
@@ -20,8 +21,8 @@ async function create_table() {
 }
 create_table()
 
-// get_jugadas
-async function get_jugadas(name_user) {
+// get_games
+async function get_games(name_user) {
 
   let resp
   
@@ -29,14 +30,25 @@ async function get_jugadas(name_user) {
   const client = await pool.connect()
 
   if (name_user != undefined) {
-    resp = await client.query(
-      { text: `select *, name from jugadas,users where  name(users) = '${name_user}'` }
-    )
+
+    if (name_user == 0) {
+      // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
+      resp = await client.query(
+        `select * from games where id <> 0 order by date desc limit 1`
+      )
+
+    } else {
+      
+      resp = await client.query(
+        { text: `select *, name from games left join users on id(users) = user_id(games)  where name(users) = '${name_user}'` }
+      )
+    }
 
   } else {
+
     // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
     resp = await client.query(
-      { text: `select *, name from jugadas,users where id(users) = user_id(jugadas) order by id(jugadas) desc` }
+      { text: `select *, name from games full join users on id(users) = user_id(games) order by percentage(games) desc` }
     )
   }
 
@@ -48,14 +60,14 @@ async function get_jugadas(name_user) {
   return resp.rows
 }
 
-// create_jugada
-async function create_jugada(score, percentage, user_id) {
+// create_game
+async function create_game(score, percentage, user_id) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const resp = await client.query(
-    `insert into jugadas (score, percentage, user_id) values ($1, $2, $3) returning *`,
+    `insert into games (score, percentage, user_id) values ($1, $2, $3) returning *`,
     [score, percentage, user_id]
   )
   // 3. Devuelvo el cliente al pool
@@ -63,4 +75,4 @@ async function create_jugada(score, percentage, user_id) {
   return resp.rows
 }
 
-module.exports = { get_jugadas, create_jugada }
+module.exports = { get_games, create_game }

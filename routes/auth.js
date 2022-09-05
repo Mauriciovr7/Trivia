@@ -12,19 +12,19 @@ router.get('/login', (req, res) => {
 
 // ruta que procesa el formulario de Login
 router.post('/login', async (req, res) => {
-  // 1. me traigo los datos del formulario
+  // 1. me traigo los dat del formulario
   const email = req.body.email.trim()
   const password = req.body.password.trim()
 
   // 2. intento buscar al usuario en base a su email 
-  let user_buscado = await get_user(email)
-  if (!user_buscado) {
+  let user_find = await get_user(email)
+  if (!user_find) {
     req.flash('errors', 'Usuario es inexistente o contraseña incorrecta')
     return res.redirect('/login')
   }
 
   // 3. verificamos las contraseñas
-  const son_coincidentes = await bcrypt.compare(password, user_buscado.password)
+  const son_coincidentes = await bcrypt.compare(password, user_find.password)
   if (!son_coincidentes) {
     req.flash('errors', 'Usuario es inexistente o contraseña incorrecta')
     return res.redirect('/login')
@@ -32,17 +32,17 @@ router.post('/login', async (req, res) => {
   
   // PARTE FINAL
   req.session.user = {
-    name: user_buscado.name,
-    email: user_buscado.email,
-    id: user_buscado.id,
-    isadmin: user_buscado.isadmin,
+    name: user_find.name,
+    email: user_find.email,
+    id: user_find.id,
+    is_admin: user_find.is_admin,
     play: false
   }
   return res.redirect('/')  
 })
 
 router.get('/logout', (req, res) => {
-  req.session.user = null;
+  req.session.user = null 
   req.session.name_us = undefined
   res.redirect('/login')
 })
@@ -53,7 +53,7 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-  // 1. me traigo los datos del formulario
+  // 1. me traigo los dat del formulario
   const name = req.body.name.trim()
   const email = req.body.email.trim()
   const password = req.body.password.trim()
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
     req.flash('errors', 'Ese email ya está ocupado')
     return res.redirect('/register')
   }
-  // 4. Finalmente lo agregamos a la base de datos
+  // 4. Finalmente lo agregamos a la base de dat
   const encrypted_pass = await bcrypt.hash(password, 10)
   const new_user = await create_user(name, email, encrypted_pass)
   req.session.user = { id: new_user.id, name, email }

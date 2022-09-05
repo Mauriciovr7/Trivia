@@ -1,18 +1,18 @@
 const { Router } = require('express')
-const { get_preguntas, create_pregunta } = require('../db/questions.js')
-const { get_jugadas, create_jugada } = require('../db/games.js')
-const { mostrarRespuesta } = require('../db/answers.js')
+const { get_questions, create_question } = require('../db/questions.js')
+const { get_games, create_game } = require('../db/games.js')
+const { get_answer } = require('../db/answers.js')
 
 const router = Router()
 
 // Vamos a crear un middleware para ver si el usuario está logueado o no
 function protected_route(req, res, next) {
   if (!req.session.user) {
-    req.flash('errors', 'Debe loguearse primero')
+    req.flash('errors', 'You must log in first')
     return res.redirect('/login')
   }
   // si llegamos hasta acá, guardamos el usuario de la sesión en una variable de los templates
-  res.locals.user = req.session.user;
+  res.locals.user = req.session.user 
   // finalmente, seguimos el camino original
   next()
 }
@@ -20,20 +20,23 @@ function protected_route(req, res, next) {
 
 // index GET
 router.get('/', protected_route, async (req, res) => {
-  try {
-    
-    req.session.user
-    req.session.name_us
-  
+
+  req.session.user
+  req.session.name_us
+
+  try {    
+
     if (req.session.name_us == '' || req.session.name_us == 'all') {
       req.session.name_us = undefined
     }
-    
-    const jugadas = await get_jugadas(req.session.name_us)
-    res.render('index.html', { jugadas})
+    const games = await get_games(req.session.name_us)
+   
+    const toplay = await get_games(0)
+
+    res.render('index.html', { games, toplay })
 
   } catch (error) {
-    console.log(error);
+    console.log(error) 
   }
   
 })
@@ -49,19 +52,19 @@ router.get('/new_question', protected_route, (req, res) => {
 router.post('/new_question', protected_route, async (req, res) => {
   try {
     
-    if (req.session.user.isadmin == true) {
-      const pregunta = req.body.pregunta
-      const respuesta_correcta = req.body.respuesta_correcta
-      const falsa1 = req.body.respuesta_falsa1
-      const falsa2 = req.body.respuesta_falsa2
-      const falsa3 = req.body.respuesta_falsa3
-      const falsa4 = req.body.respuesta_falsa4
-      await create_pregunta(pregunta, respuesta_correcta, falsa1, falsa2, falsa3, falsa4)
+    if (req.session.user.is_admin == true) {
+      const question = req.body.question.trim()
+      const answer_true = req.body.answer_true.trim()
+      const false1 = req.body.answer_false1.trim()
+      const false2 = req.body.answer_false2.trim()
+      const false3 = req.body.answer_false3.trim()
+      const false4 = req.body.answer_false4.trim()
+      await create_question(question, answer_true, false1, false2, false3, false4)
     }
-    res.redirect('/')
+    res.redirect('/new_question')
 
   } catch (error) {
-    console.log(error);
+    console.log(error) 
   }
 
 })
@@ -71,56 +74,56 @@ router.post('/new_question', protected_route, async (req, res) => {
 router.get('/lets_play', protected_route, async (req, res) => {
   try {
     
-    const datos = await get_preguntas()
-    await mostrarRespuesta(datos)
-    res.render('lets_play.html', { datos })
+    const dat = await get_questions()
+    await get_answer(dat)
+    res.render('lets_play.html', { dat })
 
   } catch (error) {
-    console.log(error);
+    console.log(error) 
   }
 })
 
-// respuestas del juego POST
+// answers del juego POST
 router.post('/lets_play', async (req, res) => {
+
+  let result = 0 
+  let percentage = 0
+
   try {
-    
-    const pregunta1 = req.body.pregunta1
-    const pregunta2 = req.body.pregunta2
-    const pregunta3 = req.body.pregunta3
+    const question1 = req.body.question1
+    const question2 = req.body.question2
+    const question3 = req.body.question3
   
     const user_id = req.session.user.id
-    let resultado = 0;
-    let porcentaje = 0;
-    if (pregunta1 == '1') {
-      resultado++
+    if (question1 == '1') {
+      result++
     }
-    if (pregunta2 == '1') {
-      resultado++
+    if (question2 == '1') {
+      result++
     }
-    if (pregunta3 == '1') {
-      resultado++
+    if (question3 == '1') {
+      result++
     }
   
-    porcentaje = ((resultado * 100) / 3).toFixed(1)
-    await create_jugada(resultado, porcentaje, user_id)
+    percentage = ((result * 100) / 3).toFixed(1)
+    await create_game(result, percentage, user_id)
     req.session.user.play = true
     res.redirect('/')
 
   } catch (error) {
-    console.log(error);
+    console.log(error) 
   }
 })
 
 // /search
-// respuestas del juego POST
 router.post('/search',  (req, res) => {
   try {
     
-    req.session.name_us = req.body.nombre
+    req.session.name_us = req.body.nombre.trim()
     res.redirect('/')
     
   } catch (error) {
-    console.log(error);
+    console.log(error) 
   }
   
 })

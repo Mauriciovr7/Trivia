@@ -5,17 +5,19 @@
 {{ navbar('/', user) }}
 <div class="container">
   {% if user.play %}
-    {% if jugadas[0].score == 3 %}
-      <div class="text-center mt-3 border border-dark border-3 text-white bg-success bg-opacity-50" id= "jugada_usuario" >
-        <h2>That was great, {{jugadas[0].name}}!  Your score is {{jugadas[0].score}}/3  ({{jugadas[0].percentage}}%).</h2>
+
+    {% if toplay[0].score == 3 %}
+
+      <div class="text-center mt-3 border border-dark border-3 text-white bg-success bg-opacity-50" id= "game_usuario" >
+        <h2>That was great, {{user.name}}!  Your score is {{toplay[0].score}}/3  ({{toplay[0].percentage}}%).</h2>
       </div>
-    {% elif jugadas[0].score == 0 %}
-      <div class="text-center mt-3 border border-dark border-3 text-white bg-danger bg-opacity-50" id= "jugada_usuario" >
-        <h2>Aaaagh, {{jugadas[0].name}}!  Your score is {{jugadas[0].score}}/3  ({{jugadas[0].percentage}}%) try again.</h2>
+    {% elif toplay[0].score == 0 %}
+      <div class="text-center mt-3 border border-dark border-3 text-white bg-danger bg-opacity-50" id= "game_usuario" >
+        <h2>Aaaagh, {{user.name}}!  Your score is {{toplay[0].score}}/3  ({{toplay[0].percentage}}%) try again.</h2>
       </div>
     {% else %}
-      <div class="text-center mt-3 border border-dark border-3 text-white bg-warning bg-opacity-50" id= "jugada_usuario" >
-        <h2>That was fine, {{jugadas[0].name}}!  Your score is {{jugadas[0].score}}/3  ({{jugadas[0].percentage}}%).</h2>
+      <div class="text-center mt-3 border border-dark border-3 text-white bg-warning bg-opacity-50" id= "game_usuario" >
+        <h2>That was fine, {{user.name}}!  Your score is {{toplay[0].score}}/3  ({{toplay[0].percentage}}%).</h2>
       </div>
     {% endif %}
   {% endif %}
@@ -47,11 +49,11 @@
         </tr>
       </thead>
       <tbody>
-        {% for jugada in jugadas %}
+        {% for game in games %}
           <tr>
-            <td>{{jugada.name}}</td>
-            <td>{{jugada.score}}/3</td>
-            <td>{{jugada.percentage}}%</td>
+            <td>{{game.name}}</td>
+            <td>{{game.score}}/3</td>
+            <td>{{game.percentage}}%</td>
           </tr>
         {%endfor%}
       </tbody>

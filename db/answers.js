@@ -1,33 +1,33 @@
-async function mostrarRespuesta(datos) {
+async function get_answer(dat) {
 
-  for (let i=0;i<datos.length;i++) {
-    datos[i].respuestas = [
+  for (let i=0;i<dat.length;i++) {
+    dat[i].answers = [
       {
         value: '1',
-        text: datos[i].respuesta_correcta
+        text: dat[i].answer_true
       },
       {
         value: '2',
-        text: datos[i].respuesta_falsa1
+        text: dat[i].answer_false1
       },
       {
         value: '3',
-        text: datos[i].respuesta_falsa2
+        text: dat[i].answer_false2
       },
       {
         value: '4',
-        text: datos[i].respuesta_falsa3
+        text: dat[i].answer_false3
       },
       {
         value: '5',
-        text: datos[i].respuesta_falsa4
+        text: dat[i].answer_false4
       },
     ]
-  datos[i].respuestas = datos[i].respuestas.sort((elem1, elem2) => Math.random() - 0.5)
+  dat[i].answers = dat[i].answers.sort((elem1, elem2) => Math.random() - 0.5)
 
   }
 
 }
 
 
-module.exports= { mostrarRespuesta}
+module.exports= { get_answer}
