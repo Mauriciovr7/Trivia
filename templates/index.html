@@ -48,13 +48,15 @@
           <th scope="col">Percentage</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody>        
         {% for game in games %}
-          <tr>
-            <td>{{game.name}}</td>
-            <td>{{game.score}}/3</td>
-            <td>{{game.percentage}}%</td>
-          </tr>
+          {% if game.score %}
+            <tr>
+              <td>{{game.name}}</td>
+              <td>{{game.score}}/3</td>
+              <td>{{game.percentage}}%</td>
+            </tr>
+          {%endif%}
         {%endfor%}
       </tbody>
     </table>
