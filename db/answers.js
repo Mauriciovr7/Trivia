@@ -1,5 +1,4 @@
 async function mostrarRespuesta(datos) {
-  console.log('fun datos cant ', datos.length);
 
   for (let i=0;i<datos.length;i++) {
     datos[i].respuestas = [
@@ -8,19 +7,19 @@ async function mostrarRespuesta(datos) {
         text: datos[i].respuesta_correcta
       },
       {
-        value: '0',
+        value: '2',
         text: datos[i].respuesta_falsa1
       },
       {
-        value: '0',
+        value: '3',
         text: datos[i].respuesta_falsa2
       },
       {
-        value: '0',
+        value: '4',
         text: datos[i].respuesta_falsa3
       },
       {
-        value: '0',
+        value: '5',
         text: datos[i].respuesta_falsa4
       },
     ]

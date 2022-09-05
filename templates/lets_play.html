@@ -7,13 +7,13 @@
 <h5 class="mb-3">Good luck!</h5>
 <div class="container-fluid">
 
-  <form action="/lets_play" method="post" class="mb-3">
+  <form action="/lets_play" method="post" class="mb-3 row">
     {% for dato in datos %}
     <div class="border border-dark p-3 mb-3">
       <input name="id" value="{{ dato.id }}" hidden>
       {% set indice=loop.index %}
       <h6> {{ indice }}. <span class="m-2 ">{{ dato.pregunta }} </span></h6>
-      
+
       {% for respuesta in dato.respuestas %}
       {% if respuesta.text %}
       <div class="form-check">
@@ -24,12 +24,12 @@
       {%endfor%}
     </div>
     {%endfor%}
-    <input name="info_div" value="{{indice}}" hidden>
-    <div class="mt-3 mb-3 float-end">
-      <button >Cancel</button>
-      <button class="ms-2" >Submit</button>
+    <div class="mt-3 mb-3 d-flex justify-content-end">
+      <a href="/" id="cancel" name="cancel" class="btn btn-outline-primary">Cancel</a>
+      <button class="ms-2 btn btn-outline-primary" >Submit</button>
     </div>
   </form>
+
 </div>
 
 {% endblock %}

@@ -1,10 +1,9 @@
 const { Router } = require('express')
-const { get_preguntas, create_pregunta } = require('../db/preguntas.js')
-const { get_jugadas, create_jugada } = require('../db/jugadas.js')
-const { mostrarRespuesta } = require('../functions.js')
+const { get_preguntas, create_pregunta } = require('../db/questions.js')
+const { get_jugadas, create_jugada } = require('../db/games.js')
+const { mostrarRespuesta } = require('../db/answers.js')
 
 const router = Router()
-let info_div = false
 
 // Vamos a crear un middleware para ver si el usuario está logueado o no
 function protected_route(req, res, next) {
@@ -22,12 +21,15 @@ function protected_route(req, res, next) {
 // index GET
 router.get('/', protected_route, async (req, res) => {
   req.session.user
-  const jugadas = await get_jugadas()
+  req.session.name_us
 
-  //console.log('userios************************** ', req.session);  
-  //console.log('jugadas ', jugadas)
- //console.log('##########',info_div)
-  res.render('index.html', { jugadas, info_div})
+  if (req.session.name_us == '' || req.session.name_us == 'all') {
+    req.session.name_us = undefined
+  }
+  
+  const jugadas = await get_jugadas(req.session.name_us)
+  
+  res.render('index.html', { jugadas})
 })
 
 
@@ -39,9 +41,7 @@ router.get('/new_question', protected_route, (req, res) => {
 
 // new_question POST
 router.post('/new_question', protected_route, async (req, res) => {
-  //console.log('isadmin ', req.session.user);
   if (req.session.user.isadmin == true) {
-    ////console.log('req.body', req.body);
     const pregunta = req.body.pregunta
     const respuesta_correcta = req.body.respuesta_correcta
     const falsa1 = req.body.respuesta_falsa1
@@ -57,9 +57,8 @@ router.post('/new_question', protected_route, async (req, res) => {
 
 // lets_play GET
 router.get('/lets_play', protected_route, async (req, res) => {
-  const datos = await get_preguntas() // const
-  //console.log('datos ', datos) // preguntas
-  mostrarRespuesta(datos) // funciones
+  const datos = await get_preguntas()
+  mostrarRespuesta(datos)
   res.render('lets_play.html', { datos })
 })
 
@@ -68,8 +67,6 @@ router.post('/lets_play', async (req, res) => {
   const pregunta1 = req.body.pregunta1
   const pregunta2 = req.body.pregunta2
   const pregunta3 = req.body.pregunta3
-  info_div = req.body.info_div
-  //console.log('********************', info_div)
 
   const user_id = req.session.user.id
   let resultado = 0;
@@ -85,8 +82,16 @@ router.post('/lets_play', async (req, res) => {
   }
 
   porcentaje = ((resultado * 100) / 3).toFixed(1)
-  //console.log('score % id_us', resultado, porcentaje, user_id)
   create_jugada(resultado, porcentaje, user_id)
+  req.session.user.play = true
+  res.redirect('/')
+})
+
+// /search
+// respuestas del juego POST
+router.post('/search', async (req, res) => {
+  req.session.name_us = req.body.nombre
+  
   res.redirect('/')
 })
 

@@ -35,13 +35,15 @@ router.post('/login', async (req, res) => {
     name: user_buscado.name,
     email: user_buscado.email,
     id: user_buscado.id,
-    isadmin: user_buscado.isadmin
+    isadmin: user_buscado.isadmin,
+    play: false
   }
   return res.redirect('/')  
 })
 
 router.get('/logout', (req, res) => {
   req.session.user = null;
+  req.session.name_us = undefined
   res.redirect('/login')
 })
 

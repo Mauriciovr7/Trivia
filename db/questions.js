@@ -23,7 +23,7 @@ create_table()
 
 
 async function get_preguntas () {
-  console.log('preguntas')
+  
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 

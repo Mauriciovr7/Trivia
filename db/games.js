@@ -1,6 +1,7 @@
 const pool = require('./pool.js')
 
-async function create_table () {
+// create_table
+async function create_table() {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
@@ -19,15 +20,27 @@ async function create_table () {
 }
 create_table()
 
+// get_jugadas
+async function get_jugadas(name_user) {
 
-async function get_jugadas () {
+  let resp
+  
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
 
-  // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
-  const resp = await client.query(
-    {text: `select *, name from jugadas,users where id(users) = user_id(jugadas)`}
-  )
+  if (name_user != undefined) {
+    resp = await client.query(
+      { text: `select *, name from jugadas,users where  name(users) = '${name_user}'` }
+    )
+
+  } else {
+    // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
+    resp = await client.query(
+      { text: `select *, name from jugadas,users where id(users) = user_id(jugadas) order by id(jugadas) desc` }
+    )
+  }
+
+
   // 3. Devuelvo el cliente al pool
   client.release()
 
@@ -35,15 +48,15 @@ async function get_jugadas () {
   return resp.rows
 }
 
-
-async function create_jugada (score, percentage, user_id) { 
+// create_jugada
+async function create_jugada(score, percentage, user_id) {
   // 1. Solicito un 'cliente' al pool de conexiones
   const client = await pool.connect()
-  
+
   // 2. Ejecuto la consulta SQL (me traigo un array de arrays)
   const resp = await client.query(
-    `insert into jugadas (score, percentage, user_id) values ($1, $2, $3) returning *`, 
-    [score, percentage, user_id] 
+    `insert into jugadas (score, percentage, user_id) values ($1, $2, $3) returning *`,
+    [score, percentage, user_id]
   )
   // 3. Devuelvo el cliente al pool
   client.release()
