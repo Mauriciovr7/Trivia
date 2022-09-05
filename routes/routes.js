@@ -33,7 +33,7 @@ router.get('/', protected_route, async (req, res) => {
     res.render('index.html', { jugadas})
 
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
   
 })
@@ -61,7 +61,7 @@ router.post('/new_question', protected_route, async (req, res) => {
     res.redirect('/')
 
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
 
 })
@@ -76,7 +76,7 @@ router.get('/lets_play', protected_route, async (req, res) => {
     res.render('lets_play.html', { datos })
 
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
 })
 
@@ -107,7 +107,7 @@ router.post('/lets_play', async (req, res) => {
     res.redirect('/')
 
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
 })
 
@@ -120,7 +120,7 @@ router.post('/search',  (req, res) => {
     res.redirect('/')
     
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
   
 })
