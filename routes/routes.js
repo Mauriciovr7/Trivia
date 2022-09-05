@@ -58,7 +58,7 @@ router.post('/new_question', protected_route, async (req, res) => {
 // lets_play GET
 router.get('/lets_play', protected_route, async (req, res) => {
   const datos = await get_preguntas()
-  mostrarRespuesta(datos)
+  await mostrarRespuesta(datos)
   res.render('lets_play.html', { datos })
 })
 
@@ -82,14 +82,14 @@ router.post('/lets_play', async (req, res) => {
   }
 
   porcentaje = ((resultado * 100) / 3).toFixed(1)
-  create_jugada(resultado, porcentaje, user_id)
+  await create_jugada(resultado, porcentaje, user_id)
   req.session.user.play = true
   res.redirect('/')
 })
 
 // /search
 // respuestas del juego POST
-router.post('/search', async (req, res) => {
+router.post('/search',  (req, res) => {
   req.session.name_us = req.body.nombre
   
   res.redirect('/')
